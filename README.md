@@ -1,2 +1,15 @@
 # Lstm_fault_detection
 fault detection in wind turbines
+
+这是使用同一种方法对风电机组的两种故障数据集进行诊断的代码，一种数据集是在风电机组基准模型上模拟了7种故障，另外一个是风机叶片结冰比赛提供的真实运行数据。
+data.zip中存放的是原始数据，data_test_15.mat是第一种，15_data.csv是第二种，xulie.xlsx是第二种的时间段索引。
+
+该方法分为三步：
+1.Lstm预测，两种数据集的运行代码分别为lstm_predicted.ipynb和icing_predicted.ipynb,使用jupyter notebook可以观察数据处理步骤。
+预测后的残差分别保存为:第一种的三个特征残差cc_b1m1.csv,cc_b2m1.csv,cc_b3m1.csv；第二种的4个特征残差icing_residuals.csv
+
+2.时域特征提取，每个残差特征提取5个时域特征，运行代码为extracted.ipynb和icing_extracted.csv。
+运行后保存的文件为features1.csv和icing_features.csv
+
+3.lstm故障分类。两种数据集的运行代码为bench_classification.py和icing_classification.py。其中lstm_classification.py和activators.py是子程序，
+通过运行结果的混淆矩阵可以观察分类效果。
