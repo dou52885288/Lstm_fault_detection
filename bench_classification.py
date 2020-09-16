@@ -5,6 +5,20 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
 
+def plot_confusion_matrix(cm, labels_name, title):
+    plt.imshow(cm, cmap=plt.cm.Blues)
+    # label 坐标轴标签说明
+    indices = range(len(cm))
+    plt.xticks(indices, labels_name)
+    plt.yticks(indices, labels_name)
+    plt.colorbar()
+    plt.xlabel('predict')
+    plt.ylabel('true')
+    plt.title(title)
+    # 显示数据
+    for first_index in range(len(cm)):  # 第几行
+        for second_index in range(len(cm[first_index])):  # 第几列
+            plt.text(second_index, first_index, cm[first_index][second_index])
 def data_set():
     fault_id = {'f1':1, 'f2':2, 'f3':3, 'f4':4, 'non':5, 'f5':6, 'f6':7, 'f7':8}
     id_to_onehot = {1:[1, 0, 0, 0, 0, 0, 0, 0],
@@ -43,7 +57,7 @@ if __name__ == '__main__':
     for j in range(epoch):
         l.forward(x_train)
         los = np.sum(np.multiply(-np.log(l.y_list), y_train))/seq
-        print(los)
+        print(j, los)
         loss[j] = los
         if (los < loss_min):
             loss_min = los
@@ -55,21 +69,20 @@ if __name__ == '__main__':
     l_min.forward(x_test)
     re_test = np.argmax(l_min.y_list, 1)
     ac = np.argmax(y_train, 1)
-    fig = plt.figure(figsize=(20, 8))
-    C1 = confusion_matrix(ac, re_train, labels=[0, 1, 2, 3, 4, 5, 6, 7])
-    C2 = confusion_matrix(ac, re_test, labels=[0, 1, 2, 3, 4, 5, 6, 7])
+    C1 = confusion_matrix(ac, re_train)
+    C2 = confusion_matrix(ac, re_test)
 
-    ax1 = fig.add_subplot(241)
-    sns.heatmap(C1, annot=True, ax=ax1)
-    ax2 = fig.add_subplot(242)
-    sns.heatmap(C2, annot=True, ax=ax2)
-
-    ax1.set_title('confusion matrix')  #标题
-    ax1.set_xlabel('predict')  # x轴
-    ax1.set_ylabel('true')
-    ax2.set_title('confusion matrix')  #标题
-    ax2.set_xlabel('predict')  # x轴
-    ax2.set_ylabel('true')
+    labels = ['0','1','2','3','4','5','6','7']
+    cm1 = confusion_matrix(ac, re_train)
+    print(cm1)
+    cm2 = confusion_matrix(ac, re_test)
+    print(cm2)
+    plt.figure(figsize=(10, 6))
+    plt.subplot(1, 2, 1)
+    plot_confusion_matrix(cm1, labels, "train Confusion Matrix")
+    plt.subplot(1, 2, 2)
+    plot_confusion_matrix(cm2, labels, "test Confusion Matrix")
+    plt.show()
 
 
 
